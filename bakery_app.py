@@ -7,7 +7,7 @@ MENU = {
     "cupcakes": ["vanilla", "chocolate", "strawberry", "red velvet"],
     "brownies": ["chocolate", "vanilla"],
     "cakes": ["vanilla", "chocolate", "red velvet", "carrot"],
-    "cookies": ["chocolate chip", "sugar", "oatmeal"]
+    "cookies": ["chocolate chip", "sugar", "oatmeal", "mint"]
 }
 
 HOURS = {
