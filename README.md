@@ -21,7 +21,7 @@ Built with Python and Streamlit.
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/bakery-ai-assistant.git
+git clone https://github.com/labina99/bakery-ai-assistant.git
 cd bakery-ai-assistant
 ```
 
