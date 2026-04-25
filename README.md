@@ -1,6 +1,6 @@
 # Sweet Crust Bakery AI Assistant
 
-An AI-powered chatbot for a fictional bakery that lets customers place orders, ask about the menu, check opening hours, find the location, and request contact details — all using natural language.
+An AI-powered chatbot for a fictional bakery that lets customers place orders, ask about the menu, check opening hours, find the location, and request contact details - all using natural language.
 
 Built with Python and Streamlit.
 
@@ -8,12 +8,12 @@ Built with Python and Streamlit.
 
 ## Features
 
-- **Natural language ordering** — customers describe their order in plain English and the assistant extracts the relevant details
-- **Multi-turn conversation** — if information is missing, the assistant asks follow-up questions and merges responses into the order
-- **Order editing** — customers can change any part of their order before confirming
-- **FAQ responses** — handles questions about the menu, opening hours, location, and how to contact staff
-- **Live order tracker** — sidebar shows which fields have been collected and which are still needed
-- **Evaluation panel** — built-in test cases at the bottom of the app show how the order extractor performs
+- **Natural language ordering** : customers describe their order in plain English and the assistant extracts the relevant details
+- **Multi-turn conversation** : if information is missing, the assistant asks follow-up questions and merges responses into the order
+- **Order editing** : customers can change any part of their order before confirming
+- **FAQ responses** : handles questions about the menu, opening hours, location, and how to contact staff
+- **Live order tracker** : sidebar shows which fields have been collected and which are still needed
+- **Evaluation panel** : built-in test cases at the bottom of the app show how the order extractor performs
 
 ---
 
@@ -84,7 +84,7 @@ bakery-ai-assistant/
 
 The assistant uses **rule-based intent detection** to classify each user message into one of several categories: placing an order, asking about the menu, hours, location, contact, or requesting a change. 
 
-For orders, it uses keyword matching and regex to extract five fields: item, flavor, quantity, pickup date, and pickup time. These are stored in session state and merged across turns — so a customer can provide information gradually and the bot keeps track of what it has and what it still needs.
+For orders, it uses keyword matching and regex to extract five fields: item, flavor, quantity, pickup date, and pickup time. These are stored in session state and merged across turns so that a customer can provide information gradually and the bot keeps track of what it has and what it still needs.
 
 ---
 
