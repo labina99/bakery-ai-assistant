@@ -7,7 +7,7 @@ MENU = {
     "cupcakes": ["vanilla", "chocolate", "strawberry", "red velvet"],
     "brownies": ["chocolate", "vanilla"],
     "cakes": ["vanilla", "chocolate", "red velvet", "carrot"],
-    "cookies": ["chocolate chip", "sugar", "oatmeal", "mint"]
+    "cookies": ["chocolate chip", "sugar", "oatmeal"]
 }
 
 HOURS = {
@@ -27,18 +27,21 @@ MAPS_LINK = "https://maps.google.com/?q=123+Baker+Street+Aurora+CO"
 
 def detect_intent(text):
     t = text.lower()
+    # Location must come before hours since "where" could overlap
+    if any(w in t for w in ["located", "location", "address", "where are you", "find you", "directions", "map"]):
+        return "location"
     if any(w in t for w in ["menu", "what do you have", "what do you sell", "what can i order", "options"]):
         return "menu"
     if any(w in t for w in ["hour", "open", "close", "schedule"]):
         return "hours"
     if any(w in t for w in ["agent", "human", "person", "staff", "contact", "call", "email", "speak to", "talk to", "reach"]):
         return "contact"
-    if any(w in t for w in ["located", "location", "address", "where", "find you", "directions", "map"]):
-        return "location"
-    if any(w in t for w in ["change", "update", "switch", "different", "instead", "modify", "wrong", "actually"]):
+    if any(w in t for w in ["change", "update", "switch", "different", "instead", "modify", "wrong", "actually", "make it", "make them"]):
         return "change"
     if any(w in t for w in ["hi", "hello", "hey", "good morning", "good afternoon"]):
         return "greeting"
+    if any(w in t for w in ["thank you", "thanks", "bye", "goodbye", "see you", "that's all", "thats all", "have a good", "take care"]):
+        return "farewell"
     return "order"
 
 def handle_intent(intent):
@@ -59,6 +62,8 @@ def handle_intent(intent):
         return "We are located at 123 Baker Street!"
     if intent == "greeting":
         return "Hi there! Welcome to Sweet Crust Bakery 🎂 I can help you place an order, check our menu, or answer any questions. What can I do for you?"
+    if intent == "farewell":
+        return "Thank you for choosing Sweet Crust Bakery! Have a wonderful day! 🎂"
     return None
 
 def extract_order(text):
@@ -159,8 +164,9 @@ if user_input:
         st.session_state.confirmed = False
         st.session_state.in_order_flow = False
 
-    confirm_words = ["yes", "confirm", "yes please", "that's correct", "correct", "yep", "yeah", "sure"]
-    if user_input.strip().lower() in confirm_words:
+    confirm_words = ["yes", "confirm", "yes please", "correct", "yep", "yeah", "sure", "sounds good", "looks good", "perfect", "great"]
+    cleaned_input = user_input.strip().lower().rstrip("!?.,")
+    if any(cleaned_input == w or cleaned_input.startswith(w + " ") for w in confirm_words):
         if st.session_state.in_order_flow:
             missing = get_missing(st.session_state.current_order)
             if missing:
@@ -196,10 +202,25 @@ if user_input:
                          f"{', '.join(missing)}.") if missing else ""
                 response = faq_response + nudge
             else:
-                st.session_state.in_order_flow = True
                 new_data = extract_order(user_input)
-                st.session_state.current_order = merge_order(st.session_state.current_order, new_data)
-                response = generate_order_response(st.session_state.current_order)
+                has_order_info = any(v for v in new_data.values())
+                import random
+                fallback_msgs = [
+                    "Sorry, I didn't quite catch that!",
+                    "Hmm, I'm not sure I understood that.",
+                    "I don't quite understand what you mean.",
+                ]
+                if not has_order_info and not st.session_state.in_order_flow:
+                    response = random.choice(fallback_msgs) + " How can I help you today?"
+                elif not has_order_info and st.session_state.in_order_flow:
+                    missing = get_missing(st.session_state.current_order)
+                    missing_str = "\n".join(f"- {m}" for m in missing)
+                    response = random.choice(fallback_msgs) + " To finish your order, I still need:\n\n" + missing_str
+
+                else:
+                    st.session_state.in_order_flow = True
+                    st.session_state.current_order = merge_order(st.session_state.current_order, new_data)
+                    response = generate_order_response(st.session_state.current_order)
 
     st.session_state.messages.append({"role": "assistant", "content": response})
 
